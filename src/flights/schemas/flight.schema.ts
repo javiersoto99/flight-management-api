@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { FlightCategory } from '../constants';
+import { FlightCategory } from '../flights.constants';
 
 export class Passenger {
   @Prop({ required: true })

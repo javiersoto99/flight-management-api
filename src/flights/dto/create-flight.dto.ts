@@ -7,7 +7,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { FlightCategory } from '../constants';
+import { FlightCategory } from '../flights.constants';
 
 export class PassengerDto {
   @IsNumber()
