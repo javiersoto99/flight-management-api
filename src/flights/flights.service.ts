@@ -43,6 +43,22 @@ export class FlightsService {
     return flights;
   }
 
+  async findById(id: string): Promise<Flight> {
+    const flight = await this.flightModel.findById(id).exec();
+    if (!flight) {
+      throw new NotFoundException(`Flight ${id} not found`);
+    }
+    return flight;
+  }
+
+  async findByCode(flightCode: string): Promise<Flight> {
+    const flight = await this.flightModel.findOne({ flightCode }).exec();
+    if (!flight) {
+      throw new NotFoundException(`Flight with code ${flightCode} not found`);
+    }
+    return flight;
+  }
+
   async addPassenger(flightId: string, passenger: Passenger): Promise<Flight> {
     const flight = await this.flightModel.findById(flightId).exec();
     if (!flight) {

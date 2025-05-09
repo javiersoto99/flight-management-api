@@ -20,6 +20,16 @@ export class FlightsController {
     return this.flightsService.findAll();
   }
 
+  @Get('code/:flightCode')
+  findByCode(@Param('flightCode') flightCode: string) {
+    return this.flightsService.findByCode(flightCode);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.flightsService.findById(id);
+  }
+
   @Post()
   create(@Body() createFlightDto: CreateFlightDto) {
     return this.flightsService.create(createFlightDto);

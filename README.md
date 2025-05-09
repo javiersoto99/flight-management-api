@@ -53,12 +53,36 @@ La API estará disponible en: http://localhost:3000/api
 
 # Ejemplos de solicitudes para Postman
 
-## Crear un nuevo vuelo
+Base URL: http://localhost:3000/api/flights
 
+## Vuelos
+
+### Obtener todos los vuelos
+
+```bash
+GET http://localhost:3000/api/flights
 ```
-POST http://localhost:3000/api/flights
-Content-Type: application/json
 
+### Obtener un vuelo por ID
+
+```bash
+GET http://localhost:3000/api/flights/{flightId}
+```
+
+### Obtener un vuelo por código
+
+```bash
+GET http://localhost:3000/api/flights/code/{flightCode}
+```
+
+### Crear un nuevo vuelo
+
+```bash
+POST http://localhost:3000/api/flights
+```
+
+```bash
+Content-Type: application/json
 {
   "flightCode": "IB2345",
   "passengers": [
@@ -73,7 +97,7 @@ Content-Type: application/json
     },
     {
       "id": 2,
-      "name": "Javier Soto",
+      "name": "María García",
       "hasConnections": false,
       "age": 28,
       "flightCategory": "Gold",
@@ -84,33 +108,18 @@ Content-Type: application/json
 }
 ```
 
-## Obtener todos los vuelos
+### Actualizar un vuelo (reemplazo parcial)
 
-```
-GET http://localhost:3000/api/flights
-```
-
-## Obtener un vuelo por ID
-
-```
-GET http://localhost:3000/api/flights/[ID_DEL_VUELO]
+```bash
+¨PATCH http://localhost:3000/api/flights/{flightId}
 ```
 
-## Obtener un vuelo por código
-
-```
-GET http://localhost:3000/api/flights/code/IB2345
-```
-
-## Actualizar un vuelo
-
-```
-PUT http://localhost:3000/api/flights/[ID_DEL_VUELO]
+```bash
 Content-Type: application/json
-
 {
   "flightCode": "IB2345",
   "passengers": [
+    "passengers": [
     {
       "id": 1,
       "name": "Juan Pérez Actualizado",
@@ -121,15 +130,6 @@ Content-Type: application/json
       "hasCheckedBaggage": true
     },
     {
-      "id": 2,
-      "name": "María García",
-      "hasConnections": false,
-      "age": 28,
-      "flightCategory": "Gold",
-      "reservationId": "RES002",
-      "hasCheckedBaggage": true
-    },
-    {
       "id": 3,
       "name": "Pedro Rodríguez",
       "hasConnections": true,
@@ -142,69 +142,55 @@ Content-Type: application/json
 }
 ```
 
-## Eliminar un vuelo
+### Eliminar un vuelo
 
-```
-DELETE http://localhost:3000/api/flights/[ID_DEL_VUELO]
+```bash
+DELETE http://localhost:3000/api/flights/{flightId}
 ```
 
-## Crear un vuelo con todos los pasajeros de muestra
+## Pasajeros (dentro de un vuelo)
 
-```
-POST http://localhost:3000/api/flights
+### Añadir un pasajero a un vuelo
+
+```bash
+POST http://localhost:3000/api/flights/{flightId}/passengers
+
 Content-Type: application/json
-
 {
-  "flightCode": "AA789",
-  "passengers": [
-    {
-      "id": 1,
-      "name": "Juan Pérez",
-      "hasConnections": true,
-      "age": 35,
-      "flightCategory": "Platinum",
-      "reservationId": "RES001",
-      "hasCheckedBaggage": true
-    },
-    {
-      "id": 2,
-      "name": "María García",
-      "hasConnections": false,
-      "age": 28,
-      "flightCategory": "Gold",
-      "reservationId": "RES002",
-      "hasCheckedBaggage": true
-    },
-    {
-      "id": 3,
-      "name": "Pedro Rodríguez",
-      "hasConnections": true,
-      "age": 42,
-      "flightCategory": "Black",
-      "reservationId": "RES003",
-      "hasCheckedBaggage": false
-    },
-    {
-      "id": 4,
-      "name": "Ana Martínez",
-      "hasConnections": false,
-      "age": 31,
-      "flightCategory": "Normal",
-      "reservationId": "RES004",
-      "hasCheckedBaggage": true
-    },
-    {
-      "id": 5,
-      "name": "Carlos López",
-      "hasConnections": true,
-      "age": 50,
-      "flightCategory": "Gold",
-      "reservationId": "RES005",
-      "hasCheckedBaggage": true
-    }
-  ]
+  "id": 3,
+  "name": "Pedro Rodríguez",
+  "hasConnections": true,
+  "age": 42,
+  "flightCategory": "Black",
+  "reservationId": "RES003",
+  "hasCheckedBaggage": false
 }
 ```
+
+### Actualizar un pasajero existente
+
+```bash
+PATCH http://localhost:3000/api/flights/{flightId}/passengers/{passengerId}
+Content-Type: application/json
+{
+"name": "Pedro R. Actualizado",
+"age": 43,
+"hasCheckedBaggage": true
+}
+```
+
+### Eliminar un pasajero de un vuelo
+
+```bash
+DELETE http://localhost:3000/api/flights/{flightId}/passengers/{passengerId}
+
+```
+
+**Nota:**
+
+- `{flightId}` debe ser el \_id generado por Mongo (p. ej. 60c72b2f9b1d8e1f4c8a9f0e).
+- `{flightCode}` es el código único de vuelo (p. ej. IB2345).
+- `{passengerId}` es el campo id que asignas manualmente a cada pasajero (p. ej. 3).
 
 # Posibles mejoras
 
