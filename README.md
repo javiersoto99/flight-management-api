@@ -30,6 +30,19 @@ git clone https://github.com/tu-usuario/flight-management-api.git
 cd flight-management-api
 ```
 
+Variables de entorno:
+
+```
+# API Config
+API_PORT=3000
+
+# MongoDB Config
+MONGODB_PORT=27017
+MONGODB_ROOT_USERNAME=admin
+MONGODB_ROOT_PASSWORD=password
+MONGODB_DATABASE=flights
+```
+
 2. Inicia los contenedores con Docker Compose:
 
 ```bash
@@ -192,3 +205,9 @@ Content-Type: application/json
   ]
 }
 ```
+
+# Posibles mejoras
+
+- Configurar mejor timestamp para que por default no sea UTC, si no que America/Santiago
+- Configurar hotreload para cambios en la api por Docker
+- (Posiblemente) Separar Passenger a otro recurso, con sus propios métodos CRUD y validaciones
