@@ -1,98 +1,199 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Flight Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este proyecto es una API REST para la gestión de vuelos (NestJS, TypeScript y MongoDB).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Estructura de datos
 
-## Description
+La API maneja una colección de vuelos (Flights) con la siguiente estructura:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+```typescript
+{
+  "flightCode": string,
+  "passengers": Array
+}
 ```
 
-## Compile and run the project
+## Requisitos previos
+
+- Docker y Docker Compose
+- Node.js (para desarrollo local)
+- Postman u otra herramienta similar para probar la API
+
+## Configuración y ejecución
+
+### Utilizando Docker
+
+1. Clona este repositorio:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/tu-usuario/flight-management-api.git
+cd flight-management-api
 ```
 
-## Run tests
+Variables de entorno:
+
+```
+# API Config
+API_PORT=3000
+
+# MongoDB Config
+MONGODB_PORT=27017
+MONGODB_ROOT_USERNAME=admin
+MONGODB_ROOT_PASSWORD=password
+MONGODB_DATABASE=flights
+```
+
+2. Inicia los contenedores con Docker Compose:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker-compose up -d
 ```
 
-## Deployment
+La API estará disponible en: http://localhost:3000/api
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+# Ejemplos de solicitudes para Postman
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Base URL: http://localhost:3000/api/flights
+
+## Vuelos
+
+### Obtener todos los vuelos
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+GET http://localhost:3000/api/flights
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Obtener un vuelo por ID
 
-## Resources
+```bash
+GET http://localhost:3000/api/flights/{flightId}
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### Obtener un vuelo por código
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+GET http://localhost:3000/api/flights/code/{flightCode}
+```
 
-## Support
+### Crear un nuevo vuelo
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+POST http://localhost:3000/api/flights
+```
 
-## Stay in touch
+```bash
+Content-Type: application/json
+{
+  "flightCode": "IB2345",
+  "passengers": [
+    {
+      "id": 1,
+      "name": "Javier Pérez",
+      "hasConnections": true,
+      "age": 35,
+      "flightCategory": "Platinum",
+      "reservationId": "RES001",
+      "hasCheckedBaggage": true
+    },
+    {
+      "id": 2,
+      "name": "María García",
+      "hasConnections": false,
+      "age": 28,
+      "flightCategory": "Gold",
+      "reservationId": "RES002",
+      "hasCheckedBaggage": true
+    }
+  ]
+}
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Actualizar un vuelo (reemplazo parcial)
 
-## License
+```bash
+¨PATCH http://localhost:3000/api/flights/{flightId}
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+Content-Type: application/json
+{
+  "flightCode": "IB2345",
+  "passengers": [
+    "passengers": [
+    {
+      "id": 1,
+      "name": "Juan Pérez Actualizado",
+      "hasConnections": true,
+      "age": 36,
+      "flightCategory": "Platinum",
+      "reservationId": "RES001",
+      "hasCheckedBaggage": true
+    },
+    {
+      "id": 3,
+      "name": "Pedro Rodríguez",
+      "hasConnections": true,
+      "age": 42,
+      "flightCategory": "Black",
+      "reservationId": "RES003",
+      "hasCheckedBaggage": false
+    }
+  ]
+}
+```
+
+### Eliminar un vuelo
+
+```bash
+DELETE http://localhost:3000/api/flights/{flightId}
+```
+
+## Pasajeros (dentro de un vuelo)
+
+### Añadir un pasajero a un vuelo
+
+```bash
+POST http://localhost:3000/api/flights/{flightId}/passengers
+
+Content-Type: application/json
+{
+  "id": 3,
+  "name": "Pedro Rodríguez",
+  "hasConnections": true,
+  "age": 42,
+  "flightCategory": "Black",
+  "reservationId": "RES003",
+  "hasCheckedBaggage": false
+}
+```
+
+### Actualizar un pasajero existente
+
+```bash
+PATCH http://localhost:3000/api/flights/{flightId}/passengers/{passengerId}
+Content-Type: application/json
+{
+"name": "Pedro R. Actualizado",
+"age": 43,
+"hasCheckedBaggage": true
+}
+```
+
+### Eliminar un pasajero de un vuelo
+
+```bash
+DELETE http://localhost:3000/api/flights/{flightId}/passengers/{passengerId}
+
+```
+
+**Nota:**
+
+- `{flightId}` debe ser el \_id generado por Mongo (p. ej. 60c72b2f9b1d8e1f4c8a9f0e).
+- `{flightCode}` es el código único de vuelo (p. ej. IB2345).
+- `{passengerId}` es el campo id que asignas manualmente a cada pasajero (p. ej. 3).
+
+# Posibles mejoras
+
+- Configurar mejor timestamp para que por default no sea UTC, si no que America/Santiago
+- Configurar hotreload para cambios en la api por Docker
+- (Posiblemente) Separar Passenger a otro recurso, con sus propios métodos CRUD y validaciones

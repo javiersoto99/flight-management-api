@@ -1,17 +1,17 @@
-version: "3.8"
+version: '3.8'
 
 services:
   mongodb:
     image: mongo:latest
     container_name: mongodb
-    restart: always
+    restart: on-failure
     ports:
-      - "27017:27017"
+      - '${MONGODB_PORT}:${MONGODB_PORT}'
     volumes:
       - mongodb_data:/data/db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
     networks:
       - app-network
 
@@ -20,15 +20,15 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: nest-api
-    restart: always
+    env_file:
+      - .env
     ports:
-      - "3000:3000"
+      - '${API_PORT}:${API_PORT}'
     environment:
       - NODE_ENV=development
-      - MONGODB_URI=mongodb://admin:password@mongodb:27017/flights?authSource=admin
+      - MONGODB_URI=mongodb://${MONGODB_ROOT_USERNAME}:${MONGODB_ROOT_PASSWORD}@mongodb:${MONGODB_PORT}/${MONGODB_DATABASE}?authSource=admin
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./:/app
     depends_on:
       - mongodb
     networks:
@@ -40,3 +40,4 @@ networks:
 
 volumes:
   mongodb_data:
+    name: flights-mongodb-data
