@@ -20,9 +20,7 @@ export class FlightsService {
       .findByIdAndUpdate(id, updateFlightDto, { new: true })
       .exec();
 
-    if (!updatedFlight) {
-      throw new NotFoundException('Flight not found');
-    }
+    if (!updatedFlight) throw new NotFoundException('Flight not found');
 
     return updatedFlight;
   }
@@ -30,9 +28,7 @@ export class FlightsService {
   async delete(id: string): Promise<Flight> {
     const flightToDelete = await this.flightModel.findByIdAndDelete(id).exec();
 
-    if (!flightToDelete) {
-      throw new NotFoundException('Flight not found');
-    }
+    if (!flightToDelete) throw new NotFoundException('Flight not found');
 
     return flightToDelete;
   }
@@ -45,9 +41,8 @@ export class FlightsService {
 
   async findById(id: string): Promise<Flight> {
     const flight = await this.flightModel.findById(id).exec();
-    if (!flight) {
-      throw new NotFoundException(`Flight ${id} not found`);
-    }
+    if (!flight) throw new NotFoundException(`Flight ${id} not found`);
+
     return flight;
   }
 
@@ -61,11 +56,20 @@ export class FlightsService {
 
   async addPassenger(flightId: string, passenger: Passenger): Promise<Flight> {
     const flight = await this.flightModel.findById(flightId).exec();
-    if (!flight) {
-      throw new NotFoundException('Flight not found');
-    }
+    if (!flight) throw new NotFoundException('Flight not found');
+
     flight.passengers.push(passenger);
     return flight.save();
+  }
+
+  private getPassengerOrThrow(flight: Flight, passengerId: number) {
+    const passenger = flight.passengers.find((p) => p.id === passengerId);
+    if (!passenger) {
+      throw new NotFoundException(
+        `Passenger ${passengerId} not found in flight ${flight.id}`
+      );
+    }
+    return passenger;
   }
 
   async updatePassenger(
@@ -74,19 +78,12 @@ export class FlightsService {
     passengerData: Partial<Passenger>
   ): Promise<Flight> {
     const flight = await this.flightModel.findById(flightId).exec();
-    if (!flight) {
-      throw new NotFoundException('Flight not found');
-    }
-    const passengerIndex = flight.passengers.findIndex(
-      (p) => p.id === passengerId
-    );
-    if (passengerIndex === -1) {
-      throw new NotFoundException('Passenger not found');
-    }
-    flight.passengers[passengerIndex] = {
-      ...flight.passengers[passengerIndex],
-      ...passengerData,
-    };
+    if (!flight) throw new NotFoundException(`Flight ${flightId} not found`);
+
+    const passenger = this.getPassengerOrThrow(flight, passengerId);
+
+    Object.assign(passenger, passengerData);
+    flight.markModified('passengers');
     return flight.save();
   }
 
